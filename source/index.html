@@ -43,7 +43,8 @@
                 <div class="btn-group pull-right">
                     <div class="btn btn-navbar">
                         <a href="#/login">
-                            Login
+                            <span ng-show="user === null"><strong>Login</strong></span>
+                            <span ng-show="user !== null"><strong>User: </strong>{{user}}</span>
                         </a>
                     </div>
                 </div>
