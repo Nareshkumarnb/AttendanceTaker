@@ -2,8 +2,8 @@
 
 // ---- Initialization ---- //
 
+require_once 'api.config.php';
 require_once 'api.init.php';
-//require_once 'api.utils.php';
 
 // ---- Services ---- //
 

@@ -13,14 +13,14 @@ require 'libs/Slim/Slim.php';
 $app = new \Slim\Slim();
 
 // ---- Initialize ActiveRecord ---- //
-/*
+
 require_once 'libs/ActiveRecord/ActiveRecord.php';
  
 ActiveRecord\Config::initialize(function($cfg) {
     $cfg->set_model_directory('libs/models');
-    $cfg->set_connections(array('development' => $GLOBALS['CONNECTION_STRING']));
+    $cfg->set_connections(array('development' => ApiConfig::$CONN_STRING));
 });
-*/
+
 // ---- Other initializations ---- //
 
 // Initialize session.

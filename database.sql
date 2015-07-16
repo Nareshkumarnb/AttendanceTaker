@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.5
 -- Dumped by pg_dump version 9.1.5
--- Started on 2015-07-15 13:20:59
+-- Started on 2015-07-16 16:43:23
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -286,7 +286,7 @@ ALTER SEQUENCE user_id_seq OWNED BY "user".id;
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_id_seq', 1, false);
+SELECT pg_catalog.setval('user_id_seq', 3, true);
 
 
 --
@@ -340,8 +340,6 @@ ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regcl
 -- Data for Name: assistance; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY assistance (id, event_id, person_id, value, user_id, date) FROM stdin;
-\.
 
 
 --
@@ -350,8 +348,6 @@ COPY assistance (id, event_id, person_id, value, user_id, date) FROM stdin;
 -- Data for Name: event; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY event (id, name, disabled) FROM stdin;
-\.
 
 
 --
@@ -360,8 +356,6 @@ COPY event (id, name, disabled) FROM stdin;
 -- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "group" (id, name, disabled) FROM stdin;
-\.
 
 
 --
@@ -370,8 +364,6 @@ COPY "group" (id, name, disabled) FROM stdin;
 -- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY person (id, first_name, last_name, group_id, disabled) FROM stdin;
-\.
 
 
 --
@@ -380,8 +372,8 @@ COPY person (id, first_name, last_name, group_id, disabled) FROM stdin;
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "user" (id, password, username, first_name, last_name, disabled, admin) FROM stdin;
-\.
+INSERT INTO "user" (id, password, username, first_name, last_name, disabled, admin) VALUES (2, 'd033e22ae348aeb5660fc2140aec35850c4da997', 'admin', 'John', 'Doe', 0, 1);
+INSERT INTO "user" (id, password, username, first_name, last_name, disabled, admin) VALUES (3, '89e495e7941cf9e40e6980d14a16bf023ccd4c91', 'demo', 'Ned', 'Smith', 0, 0);
 
 
 --
@@ -486,7 +478,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2015-07-15 13:21:00
+-- Completed on 2015-07-16 16:43:24
 
 --
 -- PostgreSQL database dump complete
