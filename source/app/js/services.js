@@ -16,7 +16,7 @@ appSvc.factory('MySession', function($rootScope) {
          * @param {Object} user The user's data.
          */
         setUser: function(user) {
-            session.user = user;
+            session.user = user;            
             $rootScope.$broadcast('userUpdated');
         },
         
@@ -27,6 +27,15 @@ appSvc.factory('MySession', function($rootScope) {
          */
         isLogged: function() {
             return session.user !== null;
+        },
+        
+        /**
+         * Verifies if the user is logged.
+         * 
+         * @returns {Boolean} A boolean indicating if the user is logged.
+         */
+        isAdmin: function() {
+            return session.user !== null && (session.user.admin === 1 || session.user.admin === true);
         }
     };
     
@@ -253,7 +262,26 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
                     if(callback) callback(false); 
                 })
                 .get("rest/api.php/logout");  
-        }  
+        },
+        
+        /**
+         * List service.
+         * 
+         * @param {String} types An string containing the name of all the types whose lists are requested.
+         * @param {Function} callback A callback function that receives a object with the requested lists.
+         */
+        list: function(types, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result.
+                    callback(data.lists);
+                })
+                .error(function(data) { 
+                    // Data could not be obtained.
+                    callback(false); 
+                })
+                .get("rest/api.php/list/" + types);
+        }
     };
     
     return svcs;

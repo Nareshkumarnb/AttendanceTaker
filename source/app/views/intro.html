@@ -1,5 +1,57 @@
 <div class="scrollable">  
     <div class="scrollable-content">
-        Site under construction
+        
+        <div class="list-group text-center">
+            
+          <div class="list-group-item" ng-click="go('/take')">
+              <div class="icon"><i class="fa fa-list feature-icon text-primary"></i></div>
+              <div>
+                  <h3>Attendance</h3>
+                  <p>Take attendance on a group for a particular event</p>
+              </div>
+          </div>
+            
+          <div class="list-group-item" ng-click="go('/records')">
+              <div class="icon"><i class="fa fa-database feature-icon text-primary"></i></div>
+              <div>
+                  <h3>Records</h3>
+                  <p>Consult previous attendance lists</p>
+              </div>
+          </div>
+            
+          <div class="list-group-item" ng-click="go('/events')" ng-show="isAdmin">
+              <div class="icon"><i class="fa fa-calendar feature-icon text-info"></i></div>
+              <div>
+                  <h3>Events</h3>
+                  <p>Manage the list of events</p>
+              </div>
+          </div>
+            
+          <div class="list-group-item" ng-click="go('/persons')" ng-show="isAdmin">
+              <div class="icon"><i class="fa fa-users feature-icon text-info"></i></div>
+              <div>
+                  <h3>Persons</h3>
+                  <p>Manage the list of persons</p>
+              </div>
+          </div>
+            
+          <div class="list-group-item" ng-click="go('/groups')" ng-show="isAdmin">
+              <div class="icon"><i class="fa fa-cubes feature-icon text-info"></i></div>
+              <div>
+                  <h3>Groups</h3>
+                  <p>Manage the list of groups</p>
+              </div>
+          </div>
+            
+          <div class="list-group-item" ng-click="go('/users')" ng-show="isAdmin">
+              <div class="icon"><i class="fa fa-child feature-icon text-info"></i></div>
+              <div>
+                  <h3>Users</h3>
+                  <p>Manage the users's accounts</p>
+              </div>
+          </div>
+
+        </div>
+        
     </div>
 </div>

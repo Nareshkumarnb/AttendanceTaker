@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.5
 -- Dumped by pg_dump version 9.1.5
--- Started on 2015-07-16 16:43:23
+-- Started on 2015-07-23 15:56:55
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -84,7 +84,7 @@ ALTER SEQUENCE assistance_id_seq OWNED BY assistance.id;
 -- Name: assistance_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('assistance_id_seq', 1, false);
+SELECT pg_catalog.setval('assistance_id_seq', 8, true);
 
 
 --
@@ -133,7 +133,7 @@ ALTER SEQUENCE event_id_seq OWNED BY event.id;
 -- Name: event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('event_id_seq', 1, false);
+SELECT pg_catalog.setval('event_id_seq', 3, true);
 
 
 --
@@ -182,7 +182,7 @@ ALTER SEQUENCE group_id_seq OWNED BY "group".id;
 -- Name: group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('group_id_seq', 1, false);
+SELECT pg_catalog.setval('group_id_seq', 3, true);
 
 
 --
@@ -233,7 +233,7 @@ ALTER SEQUENCE person_id_seq OWNED BY person.id;
 -- Name: person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('person_id_seq', 1, false);
+SELECT pg_catalog.setval('person_id_seq', 5, true);
 
 
 --
@@ -340,6 +340,9 @@ ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regcl
 -- Data for Name: assistance; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO assistance (id, event_id, person_id, value, user_id, date) VALUES (4, 1, 1, 1, 2, '2015-07-26 00:00:00+00');
+INSERT INTO assistance (id, event_id, person_id, value, user_id, date) VALUES (7, 2, 2, 2, 3, '2015-06-15 00:00:00+00');
+INSERT INTO assistance (id, event_id, person_id, value, user_id, date) VALUES (8, 3, 3, 0, 3, '2014-06-08 00:00:00+00');
 
 
 --
@@ -348,6 +351,9 @@ ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regcl
 -- Data for Name: event; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO event (id, name, disabled) VALUES (1, 'Math', 0);
+INSERT INTO event (id, name, disabled) VALUES (2, 'English', 0);
+INSERT INTO event (id, name, disabled) VALUES (3, 'Biology', 0);
 
 
 --
@@ -356,6 +362,9 @@ ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regcl
 -- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "group" (id, name, disabled) VALUES (1, 'Group 1', 0);
+INSERT INTO "group" (id, name, disabled) VALUES (2, 'Group 2', 0);
+INSERT INTO "group" (id, name, disabled) VALUES (3, 'Group 3', 0);
 
 
 --
@@ -364,6 +373,9 @@ ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regcl
 -- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO person (id, first_name, last_name, group_id, disabled) VALUES (1, 'Joe', 'Simpsons', 1, 0);
+INSERT INTO person (id, first_name, last_name, group_id, disabled) VALUES (2, 'Kate', 'Jackson', 2, 0);
+INSERT INTO person (id, first_name, last_name, group_id, disabled) VALUES (3, 'Mark', 'Smith', 3, 0);
 
 
 --
@@ -478,7 +490,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2015-07-16 16:43:24
+-- Completed on 2015-07-23 15:56:56
 
 --
 -- PostgreSQL database dump complete
