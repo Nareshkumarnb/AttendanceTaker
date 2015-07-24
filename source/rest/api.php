@@ -22,5 +22,10 @@ include_once 'api.svcs.login.php';
 //    get /findById/:type/:id
 include_once 'api.svcs.get.php';
 
+// Services for update or delete rows.
+//     put    /:type/:id
+//     delete /:type/:id
+include_once 'api.svcs.edit.php';
+
 // Run application.
 $app->run();

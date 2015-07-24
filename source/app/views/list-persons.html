@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="row in rows" ng-click="edit(row.id)">
+                <tr ng-repeat="row in rows" ng-click="edit(row.id)" ng-class="row.disabled? 'entry-disabled' : ''">
                     <td>{{row.last_name}}, {{row.first_name}}</td>
                     <td>{{getGroup(row)}}</td>
                 </tr>

@@ -37,4 +37,22 @@ class ApiUtils {
 
         return $res;
     }
+    
+    /**
+     * Verires if the current user is logged.
+     * 
+     * @return 'true' if the user is logged, 'false' if contrary.
+     */
+    public static function isLogged() {
+        return isset($_SESSION['user']);
+    }
+    
+    /**
+     * Verires if the current user is logged and has administrator privileges.
+     * 
+     * @return 'true' if the user is logged and has administrator privileges, 'false' if contrary.
+     */
+    public static function isAdmin() {
+        return isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1;
+    }
 }

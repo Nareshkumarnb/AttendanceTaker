@@ -1,0 +1,65 @@
+<div class="scrollable">  
+    <div class="scrollable-content">
+        <div class="container-fluid">
+            <h2 class="text-center">Edit user</h2>
+
+            <form name="form" novalidate ng-submit="save(form)">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" required="" name="uUsername" class="form-control" id="username" placeholder="Username" ng-model="entry.username">
+                        </div>
+                        <div class="error" ng-show="form.$submitted && form.uUsername.$error.required">The username is a required field</div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="uPassword" class="form-control" id="password" placeholder="Password" ng-model="entry.password">
+                        </div>
+                        <div class="error" ng-show="form.$submitted && form.uPassword === '' && entry.id === null">The password is a required field</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="first_name">First name</label>
+                            <input type="text" class="form-control" id="first_name" placeholder="First name" ng-model="entry.first_name">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="last_name">Last name</label>
+                            <input type="text" name="uLastName" class="form-control" id="last_name" placeholder="Last name" ng-model="entry.last_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="uAdmin" id="disabled" 
+                                       ng-model="entry.admin" ng-true-value="1" ng-false-value="0" 
+                                       ng-checked="entry.admin === 1" > Admin
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="uDisabled" id="disabled" 
+                                       ng-model="entry.disabled" ng-true-value="1" ng-false-value="0" 
+                                       ng-checked="entry.disabled === 1" > Disabled
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-xs-4"><button type="reset" ng-click="goBack()" class="btn btn-warning btn-block">Go back</button></div>
+                    <div class="col-xs-4"><a class="btn btn-danger btn-block" ng-click="delete()" ng-hide="entry.id === null">Delete</a></div>
+                    <div class="col-xs-4"><button type="submit" class="btn btn-success btn-block">Save</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

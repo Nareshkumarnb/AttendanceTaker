@@ -281,7 +281,67 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
                     callback(false); 
                 })
                 .get("rest/api.php/list/" + types);
-        }
+        },
+
+        /**
+         * Service for get a row from the database.
+         * 
+         * @param {String} type An string indicating the row's type.
+         * @param {Number} id An integer indicating the row's id.
+         * @param {Function} callback A callback function that receives the row (or 'null' if the row not exists).
+         */
+        findById: function(type, id, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result.
+                    callback(data.row);
+                })
+                .error(function(data) { 
+                    // Data could not be obtained.
+                    callback(false); 
+                })
+                .get("rest/api.php/findById/" + type + "/" + id);
+        },
+
+        /**
+         * Service for save a row in the database.
+         * 
+         * @param {String} type An string indicating the row's type.
+         * @param {Object} id An object with the row's data.
+         * @param {Function} callback A callback function that receives a boolean indicating if the row was deleted.
+         */
+        save: function(type, row, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result. 
+                    if(callback) callback(true);
+                })
+                .error(function(data) { 
+                    // Data could not be deleted.
+                    if(callback) callback(false); 
+                })
+                .put("rest/api.php/" + type + "/" + row.id, row);
+        },
+
+        /**
+         * Service for delete a row from the database.
+         * 
+         * @param {String} type An string indicating the row's type.
+         * @param {Number} id An integer indicating the row's id.
+         * @param {Function} callback A callback function that receives a boolean indicating if the row was deleted.
+         */
+        delete: function(type, id, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result. 
+                    if(callback) callback(true);
+                })
+                .error(function(data) { 
+                    // Data could not be deleted.
+                    if(callback) callback(false); 
+                })
+                .delete("rest/api.php/" + type + "/" + id);
+        }    
     };
     
     return svcs;

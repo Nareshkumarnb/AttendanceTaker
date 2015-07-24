@@ -12,6 +12,7 @@ app.config(function($routeProvider) {
             controller: 'LoginCtrl',
             templateUrl: 'app/views/login.html'
         })
+        
         .when('/records', {
             controller: 'RecordsCtrl',
             templateUrl: 'app/views/list-assistances.html',
@@ -35,6 +36,33 @@ app.config(function($routeProvider) {
         .when('/persons', {
             controller: 'PersonsCtrl',
             templateUrl: 'app/views/list-persons.html'
+        })
+        
+        .when('/group/:id', {
+            controller: 'SimpleFormCtrl',
+            templateUrl: 'app/views/edit-simple.html',
+            resolve: { 
+                dataType: function() {return 'group';},
+                returnUrl: function() {return '/groups';},
+                defaultEntry: function() {return {id: null, name: '', disabled: 0};} 
+            }
+        })
+        .when('/event/:id', {
+            controller: 'SimpleFormCtrl',
+            templateUrl: 'app/views/edit-simple.html',
+            resolve: { 
+                dataType: function() {return 'event';},
+                returnUrl: function() {return '/events';},
+                defaultEntry: function() {return {id: null, name: '', disabled: 0};} 
+            }
+        })
+        .when('/user/:id', {
+            controller: 'UserCtrl',
+            templateUrl: 'app/views/edit-user.html'
+        })
+        .when('/person/:id', {
+            controller: 'PersonCtrl',
+            templateUrl: 'app/views/edit-person.html'
         })
     ;
 });

@@ -17,9 +17,16 @@ $app->post('/login', function () use ($app) {
         // Verify if an user with that name and password exists.
         $users = User::all(array('conditions' => array('username = ? AND password = ?', $input['username'], sha1($input['password']))));
         if(count($users) > 0) {
-            // The user exists, save his data in the session and return a success message.           
-            $_SESSION["user"] = $users[0]->attributes();           
-            echo json_encode(array("error" => null, "user" => $users[0]->attributes() ));
+            // The user exists, verify if is enabled.
+            $user = $users[0];
+            if($user->disabled != 1) {
+                // The user is enabled, save his data in the session and return a success message.           
+                $_SESSION["user"] = $users[0]->attributes();           
+                echo json_encode(array("error" => null, "user" => $users[0]->attributes() ));
+            } else {
+                // The user is disabled, return error message.
+                echo json_encode(array("error" => "AccessDenied", "message" => "The user has been disabled"));
+            }
         } else {
             // The user do not exists, return error message.
             echo json_encode(array("error" => "InvalidLogin", "message" => "Invalid username or password"));

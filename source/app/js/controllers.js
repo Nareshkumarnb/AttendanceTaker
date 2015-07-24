@@ -95,7 +95,7 @@ appCtrl.controller('ListCtrl', function ($scope, $location, RestSvcs, dataType) 
     $scope.rows = [];
 
     // Get list of register.
-    RestSvcs.list(dataType, function(lists) { console.log(lists);
+    RestSvcs.list(dataType, function(lists) {
         // Verify if the register were found.
         if(lists != null && lists[dataType] != null) {
             // Update the list.
@@ -143,7 +143,7 @@ appCtrl.controller('PersonsCtrl', function ($scope, $location, RestSvcs) {
     };
 });
 
-// Controller for the flights page.
+// Controller for the records page.
 appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
     // Initialize variables.
     $scope.rows = [];
@@ -159,7 +159,7 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
             $scope.users = lists['user'];
             $scope.events = lists['event'];
             $scope.persons = lists['person'];
-            console.log(lists);
+            
             // Update the UI.
             if(!$scope.$$phase) $scope.$apply();
         }
@@ -185,5 +185,172 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
         var res = null;
         try { res = _.findWhere($scope.events, {id: record.event_id}); }catch(e) {}
         return res != null? res.name : '';
+    };
+});
+
+// Controller for an edit form.
+appCtrl.controller('SimpleFormCtrl', function ($scope, $routeParams, $location, RestSvcs, toastr, dataType, returnUrl, defaultEntry) {
+    // Initialize variables.
+    $scope.type = dataType;
+    $scope.entry = defaultEntry;
+    
+    // Get the entry to edit.
+    if(!isNaN($routeParams.id)) {
+        RestSvcs.findById(dataType, $routeParams.id, function(row) {
+            // Verify if the row was read.
+            if(row !== false) {
+                $scope.entry = row;
+            }
+
+            // Update UI.
+            if(!$scope.$$phase) $scope.$apply();
+        });
+    }
+    
+    // Behaviour for the 'cancel' button.
+    $scope.goBack = function() {
+        $location.path(returnUrl);
+        return false;
+    };
+    
+    // Behaviour for submitting the form.
+    $scope.save = function(form) {
+        // Verify if the form is valid.
+        if(form.$valid) {
+            // Call service to save changes.
+            RestSvcs.save(dataType, $scope.entry, function(res) {
+                if(res) {
+                    toastr.success('The changes were saved', 'Success');
+                    if(isNaN($routeParams.id)) $scope.goBack();
+                }
+            });
+        } else {
+            // Show error message.
+            toastr.error('They are some errors in the form', 'Error');
+        }
+    };
+    
+    // Behaviour for the 'delete' button.
+    $scope.delete = function() {
+        RestSvcs.delete(dataType, $routeParams.id, function(res) {
+            // If the register was deleted, go back to the list view.
+            if(res) $scope.goBack();
+        });
+        return false;
+    };
+});
+
+// Controller for an edit form.
+appCtrl.controller('UserCtrl', function ($scope, $routeParams, $location, RestSvcs, toastr) {
+    // Initialize variables.
+    $scope.entry = {id: null, first_name: '', last_name: '', username: '', password: '', admin: 0, disabled: 0};
+    
+    // Get the entry to edit.
+    if(!isNaN($routeParams.id)) {
+        RestSvcs.findById("user", $routeParams.id, function(row) {
+            // Verify if the row was read.
+            if(row !== false) {
+                $scope.entry = row;
+                $scope.entry.password = '';
+            }
+
+            // Update UI.
+            if(!$scope.$$phase) $scope.$apply();
+        });
+    }
+    
+    // Behaviour for the 'cancel' button.
+    $scope.goBack = function() {
+        $location.path("users");
+        return false;
+    };
+    
+    // Behaviour for submitting the form.
+    $scope.save = function(form) {
+        // Verify if the form is valid.
+        if(form.$valid) {
+            // Call service to save changes.
+            RestSvcs.save("user", $scope.entry, function(res) {
+                if(res) {
+                    toastr.success('The changes were saved', 'Success');
+                    if(isNaN($routeParams.id)) $scope.goBack();
+                }
+            });
+        } else {
+            // Show error message.
+            toastr.error('They are some errors in the form', 'Error');
+        }
+    };
+    
+    // Behaviour for the 'delete' button.
+    $scope.delete = function() {
+        RestSvcs.delete("user", $routeParams.id, function(res) {
+            // If the register was deleted, go back to the list view.
+            if(res) $scope.goBack();
+        });
+        return false;
+    };
+});
+
+// Controller for the persons form.
+appCtrl.controller('PersonCtrl', function ($scope, $routeParams, $location, RestSvcs, toastr) {
+    // Initialize variables.
+    $scope.entry = {id: null, first_name: '', last_name: '', group_id: null, disabled:0};
+    $scope.groups = [];
+    
+    // Get the list of companies.
+    RestSvcs.list("group", function(lists) {
+        if(lists != null && lists['group'] != null) {
+            // Update the list.
+            $scope.groups = lists['group'];
+            
+            // Update the UI.
+            if(!$scope.$$phase) $scope.$apply();
+        }
+    });
+    
+    // Get the entry to edit.
+    if(!isNaN($routeParams.id)) {
+        RestSvcs.findById("person", $routeParams.id, function(row) {
+            // Verify if the row was read.
+            if(row !== false) {
+                $scope.entry = row;
+            }
+            
+            // Update UI.
+            if(!$scope.$$phase) $scope.$apply();
+        });
+    }
+    
+    // Behaviour for the 'cancel' button.
+    $scope.goBack = function() {
+        $location.path("/persons");
+        return false;
+    };
+    
+    // Behaviour for submitting the form.
+    $scope.save = function(form) {
+        // Verify if the form is valid.
+        if(form.$valid) {
+            // Call service to save changes.        
+            RestSvcs.save("person", $scope.entry, function(res) {
+                if(res) {
+                    toastr.success('The changes were saved', 'Success');
+                    if(isNaN($routeParams.id)) $scope.goBack();
+                }
+            });
+        } else {
+            // Show error message.
+            toastr.error('They are some errors in the form', 'Error');            
+        }
+    };
+    
+    // Behaviour for the 'delete' button.
+    $scope.delete = function() {
+        RestSvcs.delete("person", $routeParams.id, function(res) {
+            // If the register was deleted, go back to the list view.
+            if(res) $scope.goBack();
+        });
+        return false;
     };
 });
