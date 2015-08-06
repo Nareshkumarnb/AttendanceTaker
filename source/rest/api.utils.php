@@ -9,7 +9,7 @@ class ApiUtils {
      * 
      * @param Object $row A database row.
      */
-    public static function rowToMap($row) {
+    public static function rowToMap($row) {        
         $map = $row? $row->attributes() : null;
         return $map;
     }

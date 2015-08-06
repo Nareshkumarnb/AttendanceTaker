@@ -144,6 +144,53 @@ appCtrl.controller('PersonsCtrl', function ($scope, $location, RestSvcs) {
 });
 
 // Controller for the records page.
+appCtrl.controller('AssistanceCtrl', function ($scope, $location, RestSvcs) {
+    // Initialize variables.
+    $scope.events = [];
+    $scope.groups = [];
+    $scope.entry = {group_id:null, event_id:null};
+    $scope.take = false;
+    $scope.persons = [];
+    
+    // Get list of campanies.
+    RestSvcs.list("event-group", function(lists) {
+        if(lists != null) {
+            // Update the lists.
+            $scope.events = lists['event'];
+            $scope.groups = lists['group'];
+            
+            // Update the UI.
+            if(!$scope.$$phase) $scope.$apply();
+        }
+    });
+    
+    // Behaviour for the 'next' button.
+    $scope.next = function(form) {
+        // Change flag.
+        $scope.take = true;
+        
+        // Search list of persons.
+        RestSvcs.findByGroup($scope.entry.group_id, function(list) {
+            // Get list.
+            $scope.persons = list;
+
+            // Initialize status.
+            for(var i=0; i<$scope.persons.length; i++) {
+                $scope.persons[i].status = 0;
+            }
+
+            // Update the UI.
+            if(!$scope.$$phase) $scope.$apply();
+        });        
+    };
+    
+    // Update the status of a person.
+    $scope.update = function(person) {
+        person.status = (person.status + 1)%3;
+    };
+});
+
+// Controller for the records page.
 appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
     // Initialize variables.
     $scope.rows = [];

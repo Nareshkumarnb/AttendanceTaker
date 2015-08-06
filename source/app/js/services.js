@@ -304,6 +304,25 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
         },
 
         /**
+         * Service for get all persons that belong to a group.
+         * 
+         * @param {Number} id An integer indicating the group's id.
+         * @param {Function} callback A callback function that receives the row (or 'null' if the row not exists).
+         */
+        findByGroup: function(id, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result.
+                    callback(data.row);
+                })
+                .error(function(data) { 
+                    // Data could not be obtained.
+                    callback(false); 
+                })
+                .get("rest/api.php/findByGroup/" + id);
+        },
+        
+        /**
          * Service for save a row in the database.
          * 
          * @param {String} type An string indicating the row's type.

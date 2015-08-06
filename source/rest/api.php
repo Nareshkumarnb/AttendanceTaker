@@ -20,6 +20,7 @@ include_once 'api.svcs.login.php';
 // Services for getting lists and find rows by id.
 //    get /list/:types
 //    get /findById/:type/:id
+//    get /findByGroup/:id
 include_once 'api.svcs.get.php';
 
 // Services for update or delete rows.

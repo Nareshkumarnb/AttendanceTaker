@@ -13,10 +13,13 @@ app.config(function($routeProvider) {
             templateUrl: 'app/views/login.html'
         })
         
+        .when('/assistance', {
+            controller: 'AssistanceCtrl',
+            templateUrl: 'app/views/edit-assistance.html'
+        })
         .when('/records', {
             controller: 'RecordsCtrl',
-            templateUrl: 'app/views/list-assistances.html',
-            resolve: { dataType: function() {return 'assistance';} }
+            templateUrl: 'app/views/list-assistances.html'
         })
         .when('/events', {
             controller: 'ListCtrl',

@@ -63,3 +63,30 @@ $app->get('/findById/:type/:id', function ($type, $id) {
         $GLOBALS['log']->LogError($e->getMessage());
     }    
 });
+
+// Service for get all persons from a group.
+$app->get('/findByGroup/:id', function ($id) {
+    try {
+        // Verify that the user is logged.
+        if(isset($_SESSION['user'])) {
+            // Get list of persons in the group.
+            $row = ApiUtils::rowsToMaps( Person::find('all', array('group_id' => $id)) );
+     
+            // Return result.
+            echo json_encode(array(
+                "row" => $row,
+                "error" => null
+            ));
+        } else {
+            // Return error message.
+            echo json_encode(array(
+                "error" => "AccessDenied",
+                "message" => "You must be logged to consume this service"
+            ));
+        }
+    }catch(Exception $e) {
+        // An exception ocurred. Return an error message.
+        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
+        $GLOBALS['log']->LogError($e->getMessage());
+    }    
+});
