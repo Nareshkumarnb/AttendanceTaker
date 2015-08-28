@@ -196,7 +196,7 @@ appCtrl.controller('AssistanceCtrl', function ($scope, $location, $routeParams, 
             $scope.rows = data['rows'];
             $scope.event = data['event'];
             $scope.group = data['group'];
-            $scope.date = data['date']; // TODO: usar parse para ponerlo en un formato bonito.
+            $scope.date = moment(data['date']).format("MMMM Do YYYY");
             
             // Update the UI.
             if(!$scope.$$phase) $scope.$apply();
