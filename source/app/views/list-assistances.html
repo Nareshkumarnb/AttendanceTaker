@@ -5,22 +5,24 @@
         <table class="table table-striped" ng-show="rows.length > 0">
             <thead>
                 <tr>
-                    <th>User</th>
+                    <th>Date</th>
+                    <th>Group</th>
                     <th>Event</th>
-                    <th>Person</th>
-                    <th>Value</th>
+                    <th>User</th>
+                    <th><em>Absents</em></th>
+                    <th><em>Presents</em></th>
+                    <th><em>Late</em></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="row in rows" ng-click="edit(row.id)">
-                    <td>{{getUser(row)}}</td>
-                    <td>{{getEvent(row)}}</td>
-                    <td>{{getPerson(row)}}</td>
-                    <td class="boolean">
-                        <i class="fa fa-clock-o" ng-show="row.value === 2"></i>
-                        <i class="fa fa-check" ng-show="row.value === 1"></i>
-                        <i class="fa fa-times" ng-show="row.value === 0"></i>
-                    </td>
+                    <td>row</td>
+                    <td>row</td>
+                    <td>row</td>
+                    <td>row</td>
+                    <td>row</td>
+                    <td>row</td>
+                    <td>row</td>
                 </tr>
             </tbody>
         </table>

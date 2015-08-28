@@ -2,36 +2,9 @@
     <div class="scrollable-content">
         <div class="container-fluid">
             <h2 class="text-center">Take assistance</h2>
-
-            <form novalidate name="form" ng-submit="next(form)" ng-show="take === false">
-                <div class="row text-center">
-                    <p>Select and event and a group</p>
-                </div>
-                <div class="row text-center">
-                    <div class="col-md-offset-4 col-md-2 col-sm-6">
-                        <div class="form-group">
-                            <label for="group">Group</label>
-                            <select id="group" name="uGroup" required="" ng-options="item.id as item.name for item in groups" ng-model="entry.group_id">
-                            </select>
-                        </div>
-                        <div ng-show="form.$submitted && form.uGroup.$error.required" class="error">You must select a group</div>
-                    </div>
-                    <div class="col-md-2 col-sm-6">
-                        <div class="form-group">
-                            <label for="group">Event</label>
-                            <select id="group" name="uEvent" required="" ng-options="item.id as item.name for item in events" ng-model="entry.event_id">
-                            </select>
-                        </div>
-                        <div ng-show="form.$submitted && form.uEvent.$error.required" class="error">You must select an event</div>
-                    </div>
-                </div>
-                <div class="row text-center">
-                    <button type="submit" class="btn btn-success">Continue</button>
-                </div>
-            </form>
             
-            <div ng-show="take === true">
-                <table class="table table-striped" ng-show="persons.length > 0">
+            <div ng-show="rows.length > 0">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Last name</th>
@@ -40,22 +13,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="person in persons" ng-click="update(person)">
-                            <td>{{person.last_name}}</td>
-                            <td>{{person.first_name}}</td>
+                        <tr ng-repeat="row in rows" ng-click="update(row)">
+                            <td>{{getPerson(row.person_id).last_name}}</td>
+                            <td>{{getPerson(row.person_id).first_name}}</td>
                             <td class="boolean" style="min-width: 90px;">
-                                <span ng-show="person.status === 2"><i class="fa fa-clock-o"></i> Late</span>
-                                <span ng-show="person.status === 1"><i class="fa fa-check"></i> Present</span>
-                                <span ng-show="person.status === 0"><i class="fa fa-times"></i> Absent</span>
+                                <span ng-show="row.value === 2"><i class="fa fa-clock-o"></i> Late</span>
+                                <span ng-show="row.value === 1"><i class="fa fa-check"></i> Present</span>
+                                <span ng-show="row.value === 0"><i class="fa fa-times"></i> Absent</span>
+                                <span ng-show="row.value < 0">-</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <div class="text-center" ng-hide="persons.length > 0">
-                    No persons available in the selected group.
-                </div>  
+                <div class="row text-center">
+                    <div class="col-xs-12 col-sm-4 col-sm-offset-4">
+                        <button class="btn btn-success btn-block" ng-click="save()">Save</button>
+                    </div>
+                </div>                
             </div>
+
+            <div class="text-center" ng-hide="rows.length > 0">
+                No persons available in the selected group.
+            </div>  
         </div>
     </div>
 </div>

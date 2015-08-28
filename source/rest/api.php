@@ -21,11 +21,13 @@ include_once 'api.svcs.login.php';
 //    get /list/:types
 //    get /findById/:type/:id
 //    get /findByGroup/:id
+//    get /getAssistance/:groupId/:eventId/:date
 include_once 'api.svcs.get.php';
 
 // Services for update or delete rows.
 //     put    /:type/:id
 //     delete /:type/:id
+//     put /assistanceList
 include_once 'api.svcs.edit.php';
 
 // Run application.

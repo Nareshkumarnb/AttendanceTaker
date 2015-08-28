@@ -11,7 +11,7 @@ $app->get('/list/:types', function ($types) {
             if(strpos($types, 'group') !== false) { $lists['group'] = ApiUtils::rowsToMaps( Group::find('all', array('order' => 'name asc')) ); }
             if(strpos($types, 'user') !== false) { $lists['user'] = ApiUtils::rowsToMaps( User::find('all', array('order' => 'username asc')) ); }
             if(strpos($types, 'person') !== false) { $lists['person'] = ApiUtils::rowsToMaps( Person::find('all', array('order' => 'last_name asc, first_name asc')) ); }
-            if(strpos($types, 'assistance') !== false) { $lists['assistance'] = ApiUtils::rowsToMaps( Assistance::find('all', array('order' => 'date desc')) ); }
+            if(strpos($types, 'assistance') !== false) { $lists['assistance'] = ApiUtils::rowsToMaps( Assistance::find('all', array('order' => 'creation desc')) ); }
      
             // Return result.
             echo json_encode(array(
@@ -38,16 +38,16 @@ $app->get('/findById/:type/:id', function ($type, $id) {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {
             // Get list.
-            $row = array();
-            if($type == "event") { $row = ApiUtils::rowToMap( Event::find($id) ); }
-            if($type == "group") { $row = ApiUtils::rowToMap( Group::find($id) ); }
-            if($type == "user") { $row = ApiUtils::rowToMap( User::find($id) ); }
-            if($type == "person") { $row = ApiUtils::rowToMap( Person::find($id) ); }
-            if($type == "assistance") { $row = ApiUtils::rowToMap( Assistance::find($id) ); }
+            $rows = array();
+            if($type == "event") { $rows = ApiUtils::rowToMap( Event::find($id) ); }
+            if($type == "group") { $rows = ApiUtils::rowToMap( Group::find($id) ); }
+            if($type == "user") { $rows = ApiUtils::rowToMap( User::find($id) ); }
+            if($type == "person") { $rows = ApiUtils::rowToMap( Person::find($id) ); }
+            if($type == "assistance") { $rows = ApiUtils::rowToMap( Assistance::find($id) ); }
      
             // Return result.
             echo json_encode(array(
-                "row" => $row,
+                "row" => $rows,
                 "error" => null
             ));
         } else {
@@ -70,11 +70,52 @@ $app->get('/findByGroup/:id', function ($id) {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {
             // Get list of persons in the group.
-            $row = ApiUtils::rowsToMaps( Person::find('all', array('group_id' => $id)) );
+            $rows = ApiUtils::rowsToMaps( Person::find('all', array('group_id' => $id)) );
      
             // Return result.
             echo json_encode(array(
-                "row" => $row,
+                "row" => $rows,
+                "error" => null
+            ));
+        } else {
+            // Return error message.
+            echo json_encode(array(
+                "error" => "AccessDenied",
+                "message" => "You must be logged to consume this service"
+            ));
+        }
+    }catch(Exception $e) {
+        // An exception ocurred. Return an error message.
+        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
+        $GLOBALS['log']->LogError($e->getMessage());
+    }    
+});
+
+// Service for get all persons from a group.
+$app->get('/assistanceList/:groupId/:eventId/:date', function ($groupId, $eventId, $date) {
+    try {
+        // Verify that the user is logged.
+        if(isset($_SESSION['user'])) {
+            // Get list of persons in the group.
+            $now = new DateTime();
+            $rows = ApiUtils::rowsToMaps( 
+                Assistance::find_by_sql("select * from get_assistance(" . 
+                    $_SESSION['user']['id'] . "," . 
+                    $groupId . "," . 
+                    $eventId . "," . 
+                    "'" . ($date !== 'today'? $date : $now->format('Y-m-d')) . "')")
+            );
+     
+            // Get name of event and group.
+            $event = ApiUtils::rowToMap( Event::find($eventId) );
+            $group = ApiUtils::rowToMap( Group::find($groupId) );
+            
+            // Return result.
+            echo json_encode(array(
+                "rows" => $rows,
+                "date" => ($date !== 'today'? $date : $now->format('Y-m-d')),
+                "event" => $event,
+                "group" => $group,
                 "error" => null
             ));
         } else {

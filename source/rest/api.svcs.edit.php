@@ -3,7 +3,7 @@
 // Service for create or update a row in the database.
 $app->put('/:type/:id', function ($type, $id) use ($app) {
     try {
-        // Verify that the user is logged.
+        // Verify that the user is logged as administrator.
         if(ApiUtils::isAdmin()) {
             // Init.
             $error = null;
@@ -77,7 +77,7 @@ $app->put('/:type/:id', function ($type, $id) use ($app) {
 // Service for delete a row from the database.
 $app->delete('/:type/:id', function ($type, $id) {
     try {
-        // Verify that the user is logged.
+        // Verify that the user is logged as administrator.
         if(ApiUtils::isAdmin()) {
             $error = null;
             $message = null;
@@ -161,3 +161,40 @@ $app->delete('/:type/:id', function ($type, $id) {
     }    
 });
 
+
+// Service for update the values of an assistance list.
+$app->put('/assistanceList', function () use ($app) {
+    try {
+        // Verify that the user is logged.
+        if(ApiUtils::isLogged()) {
+            // Get input.
+            $request = $app->request();
+            $input = json_decode($request->getBody());             
+            $rows = is_object($input)? get_object_vars($input) : $input;
+            
+            // Update all rows.
+            for($i =0; $i<count($rows); $i++) {
+                $entry = Assistance::find($rows[$i]->id);
+                
+                $attributes = is_object($rows[$i])? get_object_vars($rows[$i]) : $rows[$i];
+                $creation = is_object($rows[$i]->creation)? get_object_vars($rows[$i]->creation) : $rows[$i]->creation;
+                $attributes['creation'] = $creation['date'];
+                
+                if($entry != null) { $entry->update_attributes($attributes); }
+            }
+            
+            // Return result.
+            echo json_encode(array("error" => null));            
+        } else {
+            // Return error message.
+            echo json_encode(array(
+                "error" => "AccessDenied",
+                "message" => "You must be logged and have administrator privileges to consume this service"
+            ));
+        }
+    }catch(Exception $e) {
+        // An exception ocurred. Return an error message.
+        echo json_encode(array("error" => $attributes, "message" => $e->getMessage()));
+        $GLOBALS['log']->LogError($e->getMessage());
+    }    
+});

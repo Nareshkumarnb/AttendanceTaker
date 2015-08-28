@@ -112,7 +112,7 @@ appCtrl.controller('ListCtrl', function ($scope, $location, RestSvcs, dataType) 
     };
 });
 
-// Controller for the flights page.
+// Controller for the persons page.
 appCtrl.controller('PersonsCtrl', function ($scope, $location, RestSvcs) {
     // Initialize variables.
     $scope.rows = [];
@@ -143,16 +143,14 @@ appCtrl.controller('PersonsCtrl', function ($scope, $location, RestSvcs) {
     };
 });
 
-// Controller for the records page.
-appCtrl.controller('AssistanceCtrl', function ($scope, $location, RestSvcs) {
+// Controller for the take assistance page.
+appCtrl.controller('SelectGroupAndEventCtrl', function ($scope, $location, RestSvcs) {
     // Initialize variables.
     $scope.events = [];
     $scope.groups = [];
     $scope.entry = {group_id:null, event_id:null};
-    $scope.take = false;
-    $scope.persons = [];
     
-    // Get list of campanies.
+    // Get list of events and groups.
     RestSvcs.list("event-group", function(lists) {
         if(lists != null) {
             // Update the lists.
@@ -166,27 +164,63 @@ appCtrl.controller('AssistanceCtrl', function ($scope, $location, RestSvcs) {
     
     // Behaviour for the 'next' button.
     $scope.next = function(form) {
-        // Change flag.
-        $scope.take = true;
-        
-        // Search list of persons.
-        RestSvcs.findByGroup($scope.entry.group_id, function(list) {
-            // Get list.
-            $scope.persons = list;
+        // Go to edit (or create) the assitance list..
+        $location.path("/assistance/" + $scope.entry.group_id + "/" + $scope.entry.event_id +"/today");
+    };
+});
 
-            // Initialize status.
-            for(var i=0; i<$scope.persons.length; i++) {
-                $scope.persons[i].status = 0;
-            }
+// Controller for the take assistance page.
+appCtrl.controller('AssistanceCtrl', function ($scope, $location, $routeParams, RestSvcs) {
+    // Initialize variables.
+    $scope.rows = [];
+    $scope.persons = [];
+    $scope.event = [];
+    $scope.group = [];
+    $scope.date = [];
 
+    // Get list of persons.
+    RestSvcs.findByGroup($routeParams.groupId, function(rows) {
+        if(rows != null) {
+            // Update the lists.
+            $scope.persons = rows;
+            
             // Update the UI.
             if(!$scope.$$phase) $scope.$apply();
-        });        
+        }
+    });
+    
+    // Get assistance list.
+    RestSvcs.getAssistanceList($routeParams.groupId, $routeParams.eventId, $routeParams.date, function(data) {
+        if(data != null) {
+            // Update the lists.
+            $scope.rows = data['rows'];
+            $scope.event = data['event'];
+            $scope.group = data['group'];
+            $scope.date = data['date']; // TODO: usar parse para ponerlo en un formato bonito.
+            
+            // Update the UI.
+            if(!$scope.$$phase) $scope.$apply();
+        }
+    });
+    
+    // Get a person data.
+    $scope.getPerson = function(personId) {
+        return _.find($scope.persons, {id: personId});
     };
     
     // Update the status of a person.
-    $scope.update = function(person) {
-        person.status = (person.status + 1)%3;
+    $scope.update = function(row) {
+        row.value = (row.value + 1)%3;
+    };
+    
+    $scope.save = function() {
+        // Save changes.
+        RestSvcs.saveAssistanceList($scope.rows, function(success) {
+            if(success) {
+                // Display the lists of assistance.
+                $location.path("/lists");
+            }
+        });        
     };
 });
 
@@ -194,11 +228,9 @@ appCtrl.controller('AssistanceCtrl', function ($scope, $location, RestSvcs) {
 appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
     // Initialize variables.
     $scope.rows = [];
-    $scope.users = [];
-    $scope.events = [];
-    $scope.persons = [];
     
-    // Get list of campanies.
+    /*
+    // Get list of attendance lists.
     RestSvcs.list("assistance-user-event-person", function(lists) {
         if(lists != null) {
             // Update the lists.
@@ -211,12 +243,14 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
             if(!$scope.$$phase) $scope.$apply();
         }
     });
-    
+    */
+   
     // Function to edit or create a row.
-    $scope.edit = function(id) {
-        $location.path("/assistance/" + id);
+    $scope.edit = function(row) {
+        $location.path("/assistance/" + row.group_id + "/" + row.event_id + "/" + row.creation);
     };
     
+    /*
     // Function to get the person|user|event of a record.
     $scope.getUser = function(record) {
         var res = null;
@@ -233,6 +267,7 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
         try { res = _.findWhere($scope.events, {id: record.event_id}); }catch(e) {}
         return res != null? res.name : '';
     };
+    */
 });
 
 // Controller for an edit form.

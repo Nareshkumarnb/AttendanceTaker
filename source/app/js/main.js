@@ -13,11 +13,15 @@ app.config(function($routeProvider) {
             templateUrl: 'app/views/login.html'
         })
         
-        .when('/assistance', {
+        .when('/take', {
+            controller: 'SelectGroupAndEventCtrl',
+            templateUrl: 'app/views/select-group-and-event.html'
+        })
+        .when('/assistance/:groupId/:eventId/:date', {
             controller: 'AssistanceCtrl',
             templateUrl: 'app/views/edit-assistance.html'
         })
-        .when('/records', {
+        .when('/lists/', {
             controller: 'RecordsCtrl',
             templateUrl: 'app/views/list-assistances.html'
         })

@@ -70,7 +70,7 @@ appSvc.factory('MyHttp', function($http, toastr, blockUI) {
                     } else if(data.error === "AccessDenied") {
                         toastr.error("You don't have enough privileges to access to this functionality", null);
                     } else {
-                        toastr.error((data.error === "Unexpected" || data.message === undefined || data.message === null)? "An unexpected error ocurred at the server. Please contact your system administrator." : data.message, null);
+                        toastr.error("An unexpected error ocurred at the server"+((data.message === undefined || data.message === null)? '' : (' ('+data.message+')') )+".\nPlease contact your system administrator.");
                         console.log(data);
                     }
                 }
@@ -320,6 +320,46 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
                     callback(false); 
                 })
                 .get("rest/api.php/findByGroup/" + id);
+        },
+
+        /**
+         * Service for get all persons to which take assistance.
+         * 
+         * @param {Number} groupId An integer indicating the group's id.
+         * @param {Number} eventId An integer indicating the event's id.
+         * @param {String} date An string indicating the date in format yyyy-mm-dd.
+         * @param {Function} callback A callback function that receives the row (or 'null' if the row not exists).
+         */
+        getAssistanceList: function(groupId, eventId, date, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result.
+                    callback(data);
+                })
+                .error(function(data) { 
+                    // Data could not be obtained.
+                    callback(false); 
+                })
+                .get("rest/api.php/assistanceList/" + groupId + "/" + eventId + "/" + date);
+        },
+
+        /**
+         * Update a groups of rows of the table assistance.
+         * 
+         * @param {Object} rows A group of rows of the assistance table.
+         * @param {Function} callback A callback function that receives the row (or 'null' if the row not exists).
+         */
+        saveAssistanceList: function(rows, callback) {
+            new MyHttp()
+                .success(function(data) {       
+                    // Data was saved.
+                    callback(true);
+                })
+                .error(function(data) { 
+                    // Data could not be saved.
+                    callback(false); 
+                })
+                .put("rest/api.php/assistanceList", rows);
         },
         
         /**
