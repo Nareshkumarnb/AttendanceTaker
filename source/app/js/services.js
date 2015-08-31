@@ -323,6 +323,26 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
         },
 
         /**
+         * Service for get the lists of assistances between two dates.
+         * 
+         * @param {String} date1 An string describing the inferior date in format yyyy-mm-dd.
+         * @param {String} date2 An string describing the superior date in format yyyy-mm-dd.
+         * @param {Function} callback A callback function that receives the row (or 'null' if the row not exists).
+         */
+        searchByDate: function(date1, date2, callback) {
+            new MyHttp()
+                .success(function(data) {
+                    // Return result.
+                    callback(data);
+                })
+                .error(function(data) { 
+                    // Data could not be obtained.
+                    callback(false); 
+                })
+                .get("rest/api.php/searchByDate/" + date1 + "/" + date2);
+        },
+        
+        /**
          * Service for get all persons to which take assistance.
          * 
          * @param {Number} groupId An integer indicating the group's id.

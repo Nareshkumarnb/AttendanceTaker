@@ -21,7 +21,7 @@ app.config(function($routeProvider) {
             controller: 'AssistanceCtrl',
             templateUrl: 'app/views/edit-assistance.html'
         })
-        .when('/lists/', {
+        .when('/lists/:date1/:date2', {
             controller: 'RecordsCtrl',
             templateUrl: 'app/views/list-assistances.html'
         })

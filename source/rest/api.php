@@ -21,6 +21,7 @@ include_once 'api.svcs.login.php';
 //    get /list/:types
 //    get /findById/:type/:id
 //    get /findByGroup/:id
+//    get /searchByDate/:date1/:date2
 //    get /getAssistance/:groupId/:eventId/:date
 include_once 'api.svcs.get.php';
 
@@ -29,6 +30,20 @@ include_once 'api.svcs.get.php';
 //     delete /:type/:id
 //     put /assistanceList
 include_once 'api.svcs.edit.php';
+
+// Service for get the rows of a table.
+//$app->get('/test', function () {
+//    try {
+//        $conn = ActiveRecord\Connection::instance();
+//        $pdoStatement = $conn->query("SELECT * FROM person");
+//        $res = $pdoStatement->fetchAll();
+//        echo json_encode($res);
+//    }catch(Exception $e) {
+//        // An exception ocurred. Return an error message.
+//        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
+//        $GLOBALS['log']->LogError($e->getMessage());
+//    }    
+//});
 
 // Run application.
 $app->run();

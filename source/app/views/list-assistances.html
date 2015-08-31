@@ -1,7 +1,16 @@
 <div class="scrollable">  
     <div class="scrollable-content">
-        <h2 class="text-center">Records</h2>
+        <h2 class="text-center">{{ title }}</h2>
 
+        <div class="row">
+            <div class="col-xs-6 col-sm-2 text-center">
+                <button class="btn btn-info" ng-click="changeMonth(-1)">Previous month</button>
+            </div>
+            <div class="col-xs-6 col-sm-2 col-sm-offset-8 text-center">
+                <button class="btn btn-info" ng-click="changeMonth(1)">Next month</button>
+            </div>
+        </div>
+        
         <table class="table table-striped" ng-show="rows.length > 0">
             <thead>
                 <tr>
@@ -9,20 +18,16 @@
                     <th>Group</th>
                     <th>Event</th>
                     <th>User</th>
-                    <th><em>Absents</em></th>
-                    <th><em>Presents</em></th>
-                    <th><em>Late</em></th>
+                    <th>Persons</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="row in rows" ng-click="edit(row.id)">
-                    <td>row</td>
-                    <td>row</td>
-                    <td>row</td>
-                    <td>row</td>
-                    <td>row</td>
-                    <td>row</td>
-                    <td>row</td>
+                <tr ng-repeat="row in rows" ng-click="edit(row)">
+                    <td>{{ getDate(row) }}</td>
+                    <td>{{ getGroup(row) }}</td>
+                    <td>{{ getEvent(row) }}</td>
+                    <td>{{ getUser(row) }}</td>
+                    <td>{{ row.count }}</td>
                 </tr>
             </tbody>
         </table>

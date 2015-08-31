@@ -12,7 +12,12 @@ $app->get('/list/:types', function ($types) {
             if(strpos($types, 'user') !== false) { $lists['user'] = ApiUtils::rowsToMaps( User::find('all', array('order' => 'username asc')) ); }
             if(strpos($types, 'person') !== false) { $lists['person'] = ApiUtils::rowsToMaps( Person::find('all', array('order' => 'last_name asc, first_name asc')) ); }
             if(strpos($types, 'assistance') !== false) { $lists['assistance'] = ApiUtils::rowsToMaps( Assistance::find('all', array('order' => 'creation desc')) ); }
-     
+            if(strpos($types, 'list') !== false) { 
+                $conn = ActiveRecord\Connection::instance();
+                $pdoStatement = $conn->query("SELECT * FROM list");
+                $lists['list'] = $pdoStatement->fetchAll();
+            }
+            
             // Return result.
             echo json_encode(array(
                 "lists" => $lists,
@@ -75,6 +80,39 @@ $app->get('/findByGroup/:id', function ($id) {
             // Return result.
             echo json_encode(array(
                 "row" => $rows,
+                "error" => null
+            ));
+        } else {
+            // Return error message.
+            echo json_encode(array(
+                "error" => "AccessDenied",
+                "message" => "You must be logged to consume this service"
+            ));
+        }
+    }catch(Exception $e) {
+        // An exception ocurred. Return an error message.
+        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
+        $GLOBALS['log']->LogError($e->getMessage());
+    }    
+});
+
+
+// Service for get the rows of a table.
+$app->get('/searchByDate/:date1/:date2', function ($date1, $date2) {
+    try {
+        // Verify that the user is logged.
+        if(isset($_SESSION['user'])) {        
+            // Generate query.
+            $query = "SELECT * FROM list WHERE date >= '" . $date1 . "' AND date <= '" . $date2 . "'";
+
+            // Get list.
+            $conn = ActiveRecord\Connection::instance();
+            $pdoStatement = $conn->query($query);
+            $res = $pdoStatement->fetchAll();
+            
+            // Return result.
+            echo json_encode(array(
+                "lists" => $res,
                 "error" => null
             ));
         } else {

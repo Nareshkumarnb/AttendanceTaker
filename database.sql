@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.5
 -- Dumped by pg_dump version 9.1.5
--- Started on 2015-08-28 15:29:25
+-- Started on 2015-08-31 10:12:21
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -13,7 +13,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 171 (class 3079 OID 11639)
+-- TOC entry 172 (class 3079 OID 11639)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -21,8 +21,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 1909 (class 0 OID 0)
--- Dependencies: 171
+-- TOC entry 1914 (class 0 OID 0)
+-- Dependencies: 172
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -54,8 +54,8 @@ CREATE TABLE assistance (
 ALTER TABLE public.assistance OWNER TO postgres;
 
 --
--- TOC entry 183 (class 1255 OID 86509)
--- Dependencies: 510 5 513
+-- TOC entry 184 (class 1255 OID 86511)
+-- Dependencies: 517 5 511
 -- Name: get_assistance(integer, integer, integer, date); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -103,7 +103,7 @@ CREATE SEQUENCE assistance_id_seq
 ALTER TABLE public.assistance_id_seq OWNER TO postgres;
 
 --
--- TOC entry 1910 (class 0 OID 0)
+-- TOC entry 1915 (class 0 OID 0)
 -- Dependencies: 169
 -- Name: assistance_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -112,17 +112,17 @@ ALTER SEQUENCE assistance_id_seq OWNED BY assistance.id;
 
 
 --
--- TOC entry 1911 (class 0 OID 0)
+-- TOC entry 1916 (class 0 OID 0)
 -- Dependencies: 169
 -- Name: assistance_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('assistance_id_seq', 14, true);
+SELECT pg_catalog.setval('assistance_id_seq', 23, true);
 
 
 --
 -- TOC entry 166 (class 1259 OID 86242)
--- Dependencies: 1879 5
+-- Dependencies: 1884 5
 -- Name: event; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -152,7 +152,7 @@ CREATE SEQUENCE event_id_seq
 ALTER TABLE public.event_id_seq OWNER TO postgres;
 
 --
--- TOC entry 1912 (class 0 OID 0)
+-- TOC entry 1917 (class 0 OID 0)
 -- Dependencies: 165
 -- Name: event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -161,7 +161,7 @@ ALTER SEQUENCE event_id_seq OWNED BY event.id;
 
 
 --
--- TOC entry 1913 (class 0 OID 0)
+-- TOC entry 1918 (class 0 OID 0)
 -- Dependencies: 165
 -- Name: event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -171,7 +171,7 @@ SELECT pg_catalog.setval('event_id_seq', 4, true);
 
 --
 -- TOC entry 164 (class 1259 OID 86234)
--- Dependencies: 1877 5
+-- Dependencies: 1882 5
 -- Name: group; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -201,7 +201,7 @@ CREATE SEQUENCE group_id_seq
 ALTER TABLE public.group_id_seq OWNER TO postgres;
 
 --
--- TOC entry 1914 (class 0 OID 0)
+-- TOC entry 1919 (class 0 OID 0)
 -- Dependencies: 163
 -- Name: group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -210,7 +210,7 @@ ALTER SEQUENCE group_id_seq OWNED BY "group".id;
 
 
 --
--- TOC entry 1915 (class 0 OID 0)
+-- TOC entry 1920 (class 0 OID 0)
 -- Dependencies: 163
 -- Name: group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -220,7 +220,7 @@ SELECT pg_catalog.setval('group_id_seq', 4, true);
 
 --
 -- TOC entry 168 (class 1259 OID 86250)
--- Dependencies: 1881 5
+-- Dependencies: 1886 5
 -- Name: person; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -234,6 +234,18 @@ CREATE TABLE person (
 
 
 ALTER TABLE public.person OWNER TO postgres;
+
+--
+-- TOC entry 171 (class 1259 OID 86512)
+-- Dependencies: 1877 5
+-- Name: list; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW list AS
+    SELECT assistance.event_id, person.group_id, date(assistance.creation) AS date, count(*) AS count, assistance.user_id FROM (assistance JOIN person ON ((assistance.person_id = person.id))) GROUP BY assistance.user_id, assistance.event_id, person.group_id, date(assistance.creation) ORDER BY date(assistance.creation), person.group_id, assistance.event_id, assistance.user_id;
+
+
+ALTER TABLE public.list OWNER TO postgres;
 
 --
 -- TOC entry 167 (class 1259 OID 86248)
@@ -252,7 +264,7 @@ CREATE SEQUENCE person_id_seq
 ALTER TABLE public.person_id_seq OWNER TO postgres;
 
 --
--- TOC entry 1916 (class 0 OID 0)
+-- TOC entry 1921 (class 0 OID 0)
 -- Dependencies: 167
 -- Name: person_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -261,7 +273,7 @@ ALTER SEQUENCE person_id_seq OWNED BY person.id;
 
 
 --
--- TOC entry 1917 (class 0 OID 0)
+-- TOC entry 1922 (class 0 OID 0)
 -- Dependencies: 167
 -- Name: person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -271,7 +283,7 @@ SELECT pg_catalog.setval('person_id_seq', 13, true);
 
 --
 -- TOC entry 162 (class 1259 OID 86221)
--- Dependencies: 1874 1875 5
+-- Dependencies: 1879 1880 5
 -- Name: user; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -305,7 +317,7 @@ CREATE SEQUENCE user_id_seq
 ALTER TABLE public.user_id_seq OWNER TO postgres;
 
 --
--- TOC entry 1918 (class 0 OID 0)
+-- TOC entry 1923 (class 0 OID 0)
 -- Dependencies: 161
 -- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -314,7 +326,7 @@ ALTER SEQUENCE user_id_seq OWNED BY "user".id;
 
 
 --
--- TOC entry 1919 (class 0 OID 0)
+-- TOC entry 1924 (class 0 OID 0)
 -- Dependencies: 161
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -323,8 +335,8 @@ SELECT pg_catalog.setval('user_id_seq', 4, true);
 
 
 --
--- TOC entry 1882 (class 2604 OID 86271)
--- Dependencies: 170 169 170
+-- TOC entry 1887 (class 2604 OID 86271)
+-- Dependencies: 169 170 170
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -332,8 +344,8 @@ ALTER TABLE ONLY assistance ALTER COLUMN id SET DEFAULT nextval('assistance_id_s
 
 
 --
--- TOC entry 1878 (class 2604 OID 86245)
--- Dependencies: 166 165 166
+-- TOC entry 1883 (class 2604 OID 86245)
+-- Dependencies: 165 166 166
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -341,8 +353,8 @@ ALTER TABLE ONLY event ALTER COLUMN id SET DEFAULT nextval('event_id_seq'::regcl
 
 
 --
--- TOC entry 1876 (class 2604 OID 86237)
--- Dependencies: 164 163 164
+-- TOC entry 1881 (class 2604 OID 86237)
+-- Dependencies: 163 164 164
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -350,8 +362,8 @@ ALTER TABLE ONLY "group" ALTER COLUMN id SET DEFAULT nextval('group_id_seq'::reg
 
 
 --
--- TOC entry 1880 (class 2604 OID 86253)
--- Dependencies: 168 167 168
+-- TOC entry 1885 (class 2604 OID 86253)
+-- Dependencies: 167 168 168
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -359,7 +371,7 @@ ALTER TABLE ONLY person ALTER COLUMN id SET DEFAULT nextval('person_id_seq'::reg
 
 
 --
--- TOC entry 1873 (class 2604 OID 86224)
+-- TOC entry 1878 (class 2604 OID 86224)
 -- Dependencies: 161 162 162
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
@@ -368,25 +380,34 @@ ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regcl
 
 
 --
--- TOC entry 1901 (class 0 OID 86268)
--- Dependencies: 170 1902
+-- TOC entry 1906 (class 0 OID 86268)
+-- Dependencies: 170 1907
 -- Data for Name: assistance; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO assistance VALUES (18, 3, 1, 1, 2, '2015-08-31 00:00:00');
+INSERT INTO assistance VALUES (19, 3, 8, 1, 2, '2015-08-31 00:00:00');
+INSERT INTO assistance VALUES (20, 3, 11, 1, 2, '2015-08-31 00:00:00');
+INSERT INTO assistance VALUES (15, 3, 2, 0, 2, '2015-08-28 00:00:00');
+INSERT INTO assistance VALUES (16, 3, 9, 1, 2, '2015-08-28 00:00:00');
+INSERT INTO assistance VALUES (17, 3, 12, 2, 2, '2015-08-28 00:00:00');
+INSERT INTO assistance VALUES (9, 1, 1, 0, 2, '2015-08-28 15:27:28');
+INSERT INTO assistance VALUES (10, 1, 8, 0, 2, '2015-08-28 15:27:28');
+INSERT INTO assistance VALUES (11, 1, 11, 0, 2, '2015-08-28 15:27:28');
+INSERT INTO assistance VALUES (12, 1, 1, 0, 2, '2015-07-27 00:00:00');
+INSERT INTO assistance VALUES (13, 1, 8, 1, 2, '2015-07-27 00:00:00');
+INSERT INTO assistance VALUES (14, 1, 11, 2, 2, '2015-07-27 00:00:00');
 INSERT INTO assistance VALUES (4, 1, 1, 1, 2, '2015-07-26 00:00:00');
 INSERT INTO assistance VALUES (7, 2, 2, 2, 3, '2015-06-15 00:00:00');
 INSERT INTO assistance VALUES (8, 3, 3, 0, 3, '2014-06-08 00:00:00');
-INSERT INTO assistance VALUES (9, 1, 1, -1, 2, '2015-08-28 15:27:28.699');
-INSERT INTO assistance VALUES (10, 1, 8, -1, 2, '2015-08-28 15:27:28.699');
-INSERT INTO assistance VALUES (11, 1, 11, -1, 2, '2015-08-28 15:27:28.699');
-INSERT INTO assistance VALUES (12, 1, 1, -1, 2, '2015-07-27 00:00:00');
-INSERT INTO assistance VALUES (13, 1, 8, -1, 2, '2015-07-27 00:00:00');
-INSERT INTO assistance VALUES (14, 1, 11, -1, 2, '2015-07-27 00:00:00');
+INSERT INTO assistance VALUES (21, 1, 2, 0, 2, '2015-08-31 00:00:00');
+INSERT INTO assistance VALUES (22, 1, 9, 1, 2, '2015-08-31 00:00:00');
+INSERT INTO assistance VALUES (23, 1, 12, 1, 2, '2015-08-31 00:00:00');
 
 
 --
--- TOC entry 1899 (class 0 OID 86242)
--- Dependencies: 166 1902
+-- TOC entry 1904 (class 0 OID 86242)
+-- Dependencies: 166 1907
 -- Data for Name: event; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -396,8 +417,8 @@ INSERT INTO event VALUES (3, 'Biology', 0);
 
 
 --
--- TOC entry 1898 (class 0 OID 86234)
--- Dependencies: 164 1902
+-- TOC entry 1903 (class 0 OID 86234)
+-- Dependencies: 164 1907
 -- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -407,8 +428,8 @@ INSERT INTO "group" VALUES (3, 'Group 3', 0);
 
 
 --
--- TOC entry 1900 (class 0 OID 86250)
--- Dependencies: 168 1902
+-- TOC entry 1905 (class 0 OID 86250)
+-- Dependencies: 168 1907
 -- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -424,8 +445,8 @@ INSERT INTO person VALUES (13, 'Martin', 'Muntz', 3, 0);
 
 
 --
--- TOC entry 1897 (class 0 OID 86221)
--- Dependencies: 162 1902
+-- TOC entry 1902 (class 0 OID 86221)
+-- Dependencies: 162 1907
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -434,8 +455,8 @@ INSERT INTO "user" VALUES (3, '89e495e7941cf9e40e6980d14a16bf023ccd4c91', 'demo'
 
 
 --
--- TOC entry 1892 (class 2606 OID 86273)
--- Dependencies: 170 170 1903
+-- TOC entry 1897 (class 2606 OID 86273)
+-- Dependencies: 170 170 1908
 -- Name: assistance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -444,8 +465,8 @@ ALTER TABLE ONLY assistance
 
 
 --
--- TOC entry 1888 (class 2606 OID 86247)
--- Dependencies: 166 166 1903
+-- TOC entry 1893 (class 2606 OID 86247)
+-- Dependencies: 166 166 1908
 -- Name: event_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -454,8 +475,8 @@ ALTER TABLE ONLY event
 
 
 --
--- TOC entry 1886 (class 2606 OID 86239)
--- Dependencies: 164 164 1903
+-- TOC entry 1891 (class 2606 OID 86239)
+-- Dependencies: 164 164 1908
 -- Name: group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -464,8 +485,8 @@ ALTER TABLE ONLY "group"
 
 
 --
--- TOC entry 1890 (class 2606 OID 86255)
--- Dependencies: 168 168 1903
+-- TOC entry 1895 (class 2606 OID 86255)
+-- Dependencies: 168 168 1908
 -- Name: person_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -474,8 +495,8 @@ ALTER TABLE ONLY person
 
 
 --
--- TOC entry 1884 (class 2606 OID 86226)
--- Dependencies: 162 162 1903
+-- TOC entry 1889 (class 2606 OID 86226)
+-- Dependencies: 162 162 1908
 -- Name: user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -484,8 +505,8 @@ ALTER TABLE ONLY "user"
 
 
 --
--- TOC entry 1894 (class 2606 OID 86488)
--- Dependencies: 166 1887 170 1903
+-- TOC entry 1899 (class 2606 OID 86488)
+-- Dependencies: 166 170 1892 1908
 -- Name: assistance_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -494,8 +515,8 @@ ALTER TABLE ONLY assistance
 
 
 --
--- TOC entry 1895 (class 2606 OID 86493)
--- Dependencies: 170 168 1889 1903
+-- TOC entry 1900 (class 2606 OID 86493)
+-- Dependencies: 168 170 1894 1908
 -- Name: assistance_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -504,8 +525,8 @@ ALTER TABLE ONLY assistance
 
 
 --
--- TOC entry 1896 (class 2606 OID 86498)
--- Dependencies: 1883 170 162 1903
+-- TOC entry 1901 (class 2606 OID 86498)
+-- Dependencies: 1888 170 162 1908
 -- Name: assistance_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -514,8 +535,8 @@ ALTER TABLE ONLY assistance
 
 
 --
--- TOC entry 1893 (class 2606 OID 86427)
--- Dependencies: 164 168 1885 1903
+-- TOC entry 1898 (class 2606 OID 86427)
+-- Dependencies: 168 164 1890 1908
 -- Name: person_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -524,7 +545,7 @@ ALTER TABLE ONLY person
 
 
 --
--- TOC entry 1908 (class 0 OID 0)
+-- TOC entry 1913 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -535,7 +556,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2015-08-28 15:29:25
+-- Completed on 2015-08-31 10:12:22
 
 --
 -- PostgreSQL database dump complete

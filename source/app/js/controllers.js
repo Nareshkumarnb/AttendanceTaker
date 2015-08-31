@@ -40,6 +40,13 @@ appCtrl.controller('IntroCtrl', function ($scope, $rootScope, $location, MySessi
     $scope.go = function(path) {
         $location.path(path);
     };
+    
+    // Go to list method.
+    $scope.goToList = function() {
+        var date1 = moment().startOf('month');
+        var date2 = moment().endOf('month');
+        $location.path('/lists/' +date1.format('YYYY-MM-DD')+ '/' +date2.format('YYYY-MM-DD'));
+    };
 });
 
 // Controller for the login view.
@@ -184,22 +191,19 @@ appCtrl.controller('AssistanceCtrl', function ($scope, $location, $routeParams, 
             // Update the lists.
             $scope.persons = rows;
             
-            // Update the UI.
-            if(!$scope.$$phase) $scope.$apply();
-        }
-    });
-    
-    // Get assistance list.
-    RestSvcs.getAssistanceList($routeParams.groupId, $routeParams.eventId, $routeParams.date, function(data) {
-        if(data != null) {
-            // Update the lists.
-            $scope.rows = data['rows'];
-            $scope.event = data['event'];
-            $scope.group = data['group'];
-            $scope.date = moment(data['date']).format("MMMM Do YYYY");
-            
-            // Update the UI.
-            if(!$scope.$$phase) $scope.$apply();
+            // Get assistance list.
+            RestSvcs.getAssistanceList($routeParams.groupId, $routeParams.eventId, $routeParams.date, function(data) {
+                if(data != null) {
+                    // Update the lists.
+                    $scope.rows = data['rows'];
+                    $scope.event = data['event'];
+                    $scope.group = data['group'];
+                    $scope.date = moment(data['date']).format("MMMM Do YYYY");
+
+                    // Update the UI.
+                    if(!$scope.$$phase) $scope.$apply();
+                }
+            });
         }
     });
     
@@ -225,49 +229,67 @@ appCtrl.controller('AssistanceCtrl', function ($scope, $location, $routeParams, 
 });
 
 // Controller for the records page.
-appCtrl.controller('RecordsCtrl', function ($scope, $location, RestSvcs) {
+appCtrl.controller('RecordsCtrl', function ($scope, $location, $routeParams, RestSvcs) {
     // Initialize variables.
     $scope.rows = [];
+    $scope.events = [];
+    $scope.groups = [];    
+    $scope.users = [];    
+    $scope.title = 'Records of ' + moment($routeParams.date1).format("MMMM YYYY");
     
-    /*
-    // Get list of attendance lists.
-    RestSvcs.list("assistance-user-event-person", function(lists) {
+    // Get list of events, groups and users.
+    RestSvcs.list("event-group-user", function(lists) {
         if(lists != null) {
             // Update the lists.
-            $scope.rows = lists['assistance'];
-            $scope.users = lists['user'];
+            $scope.groups = lists['group'];
             $scope.events = lists['event'];
-            $scope.persons = lists['person'];
-            
-            // Update the UI.
-            if(!$scope.$$phase) $scope.$apply();
+            $scope.users = lists['user'];
+
+            // Get lists of attendances
+            RestSvcs.searchByDate($routeParams.date1, $routeParams.date2, function(data) {
+                if(data != null) {
+                    // Update the lists.
+                    $scope.rows = data['lists'];                
+
+                    // Update the UI.
+                    if(!$scope.$$phase) $scope.$apply();
+                }
+            });
         }
     });
-    */
-   
+    
     // Function to edit or create a row.
     $scope.edit = function(row) {
-        $location.path("/assistance/" + row.group_id + "/" + row.event_id + "/" + row.creation);
+        $location.path("/assistance/" + row.group_id + "/" + row.event_id + "/" + row.date);
     };
     
-    /*
-    // Function to get the person|user|event of a record.
-    $scope.getUser = function(record) {
-        var res = null;
-        try { res = _.findWhere($scope.users, {id: record.user_id}); }catch(e) {}
-        return res != null? res.username : '';
+    // Go to next|previous month.
+    $scope.changeMonth = function(num) {
+        var date1 = moment($routeParams.date1).add(num, 'months').startOf('month');
+        var date2 = moment($routeParams.date1).add(num, 'months').endOf('month');
+        $location.path('/lists/' +date1.format('YYYY-MM-DD')+ '/' +date2.format('YYYY-MM-DD'));
     };
-    $scope.getPerson = function(record) {
+    
+    // Function to get the event|group|user of a record.
+    $scope.getDate = function(record) {
+        return record != null && record.date != null? moment(record.date).format("MMMM Do YYYY") : null;
+    }
+    $scope.getGroup = function(record) {
         var res = null;
-        try { res = _.findWhere($scope.persons, {id: record.person_id}); }catch(e) {}
-        return res != null? (res.first_name + " " + res.last_name) : '';
+        try { res = _.findWhere($scope.groups, {id: record.group_id}); }catch(e) {}
+        return res != null? res.name : '';
     };
     $scope.getEvent = function(record) {
         var res = null;
         try { res = _.findWhere($scope.events, {id: record.event_id}); }catch(e) {}
         return res != null? res.name : '';
     };
-    */
+    $scope.getUser = function(record) {
+        var res = null;
+        try { res = _.findWhere($scope.users, {id: record.user_id}); }catch(e) {}
+        return res != null? res.username : '';
+    };
+    
 });
 
 // Controller for an edit form.
