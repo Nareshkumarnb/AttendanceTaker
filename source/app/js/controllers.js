@@ -171,8 +171,11 @@ appCtrl.controller('SelectGroupAndEventCtrl', function ($scope, $location, RestS
     
     // Behaviour for the 'next' button.
     $scope.next = function(form) {
-        // Go to edit (or create) the assitance list..
-        $location.path("/assistance/" + $scope.entry.group_id + "/" + $scope.entry.event_id +"/today");
+        // Verify if the form is valid.
+        if(form.$valid) {
+            // Go to edit (or create) the assitance list..
+            $location.path("/assistance/" + $scope.entry.group_id + "/" + $scope.entry.event_id +"/today");
+        }
     };
 });
 

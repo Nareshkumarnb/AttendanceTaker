@@ -12,7 +12,7 @@
                     <div class="col-md-offset-4 col-md-2 col-sm-6">
                         <div class="form-group">
                             <label for="group">Group</label>
-                            <select id="group" name="uGroup" required="" ng-options="item.id as item.name for item in groups" ng-model="entry.group_id">
+                            <select id="group" name="uGroup" required="" ng-options="item.id as item.name for item in groups | filter:{disabled: 0}" ng-model="entry.group_id">
                             </select>
                         </div>
                         <div ng-show="form.$submitted && form.uGroup.$error.required" class="error">You must select a group</div>
@@ -20,7 +20,7 @@
                     <div class="col-md-2 col-sm-6">
                         <div class="form-group">
                             <label for="group">Event</label>
-                            <select id="group" name="uEvent" required="" ng-options="item.id as item.name for item in events" ng-model="entry.event_id">
+                            <select id="group" name="uEvent" required="" ng-options="item.id as item.name for item in events | filter:{disabled: 0}" ng-model="entry.event_id">
                             </select>
                         </div>
                         <div ng-show="form.$submitted && form.uEvent.$error.required" class="error">You must select an event</div>

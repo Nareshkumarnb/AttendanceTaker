@@ -6,22 +6,20 @@ AttendanceTaker
 Features
 --------
 
-Standard's user can:
-
- * ...
+Standard's user can take attendance and check previous attendance lists.
      
-Administrator's users can (additionally)...
+Administrator's users can (additionally) manage the list of events, groups, persons and users.
 
 Usage
 -----
 
 The application should be able to run in any valid PHP web server, such as Apache.
 
-The application makes uses of a PostgreSQL database, whose parameters must be defined in the file `.....` (located in the folder `......`). Before the first run, the script `......` must be executed in the database.
+The application makes uses of a PostgreSQL database, whose parameters must be defined in the file `api.config.php` (located in the folder `source\rest`). Before the first run, the script `database.sql` must be executed in the database.
 
 After installation, two default accounts can be used to login: "admin" and "demo" (whose passwords are respectively "admin" and "demo").
 
-Optionally, you can configure the path in which the log files are going to be created. In order to do it, you must edit the file `.....` located in the folder `........`).
+Optionally, you can configure the path in which the log files are going to be created. In order to do it, you must edit the file `api.init.php` located in the folder `source\rest`).
 
 Stack
 -----

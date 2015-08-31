@@ -70,7 +70,7 @@ BEGIN
 	    (groupId IS NULL OR per.group_id = groupId) AND 
 	    (fecha IS NULL OR DATE(assi.creation) = fecha)) THEN
 		INSERT INTO assistance (event_id, person_id, value, user_id, creation)
-		SELECT eventId, per.id, -1, userId, fecha FROM person per WHERE per.group_id = groupId;
+		SELECT eventId, per.id, -1, userId, fecha FROM person per WHERE per.group_id = groupId AND per.disabled = 0;
 	END IF;
 
 	RETURN QUERY 
