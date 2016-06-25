@@ -3,10 +3,10 @@
 var appCtrl = angular.module('myApp.Controllers', ['toastr']);
 
 // Controller for the navigation bar.
-appCtrl.controller('NavbarCtrl', function ($scope, $rootScope, $location, RestSvcs, MySession) {
+appCtrl.controller('NavbarCtrl', function ($scope, $location, RestSvcs, MySession) {
     // Update name displayed at header when user changes.
     $scope.user = null;
-    $rootScope.$on('userUpdated', function () {
+    $scope.$on('userUpdated', function () {
         $scope.user = MySession.user !== null? MySession.user.username : null;
     });
     
@@ -29,10 +29,10 @@ appCtrl.controller('NavbarCtrl', function ($scope, $rootScope, $location, RestSv
 
 
 // Controller for the home page.
-appCtrl.controller('IntroCtrl', function ($scope, $rootScope, $location, MySession) {
+appCtrl.controller('IntroCtrl', function ($scope, $location, MySession) {
     // Verify if the user is admin.
     $scope.isAdmin = MySession.isAdmin();
-    $rootScope.$on('userUpdated', function () {
+    $scope.$on('userUpdated', function () {
         $scope.isAdmin = MySession.isAdmin();
     });
     
@@ -50,11 +50,11 @@ appCtrl.controller('IntroCtrl', function ($scope, $rootScope, $location, MySessi
 });
 
 // Controller for the login view.
-appCtrl.controller('LoginCtrl', function ($scope, $rootScope, $route, $location, toastr, RestSvcs, MySession) {
+appCtrl.controller('LoginCtrl', function ($scope, $route, $location, toastr, RestSvcs, MySession) {
     // Define variables.
     $scope.user = {name: MySession.user !== null? MySession.user.username : null, pass: null};
     $scope.logged = MySession.isLogged();
-    $rootScope.$on('userUpdated', function () {
+    $scope.$on('userUpdated', function () {
         $route.reload();
     });
 
@@ -220,8 +220,8 @@ appCtrl.controller('AssistanceCtrl', function ($scope, $location, $routeParams, 
         row.value = (row.value + 1)%3;
     };
     
+    // Save changes.
     $scope.save = function() {
-        // Save changes.
         RestSvcs.saveAssistanceList($scope.rows, function(success) {
             if(success) {
                 // Display the lists of assistance.
@@ -252,7 +252,7 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, $routeParams, Res
             RestSvcs.searchByDate($routeParams.date1, $routeParams.date2, function(data) {
                 if(data != null) {
                     // Update the lists.
-                    $scope.rows = data['lists'];                
+                    $scope.rows = data['lists'];
 
                     // Update the UI.
                     if(!$scope.$$phase) $scope.$apply();
