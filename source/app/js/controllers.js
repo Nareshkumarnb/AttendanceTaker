@@ -236,9 +236,11 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, $routeParams, Res
     // Initialize variables.
     $scope.rows = [];
     $scope.events = [];
-    $scope.groups = [];    
-    $scope.users = [];    
-    $scope.title = 'Records of ' + moment($routeParams.date1).format("MMMM YYYY");
+    $scope.groups = [];
+    $scope.users = [];
+    $scope.date1 = $routeParams.date1? $routeParams.date1 : moment().startOf('month').format('YYYY-MM-DD');
+    $scope.date2 = $routeParams.date2? $routeParams.date2 : moment().endOf('month').format('YYYY-MM-DD');
+    $scope.title = 'Records of ' + moment($scope.date1).format("MMMM YYYY");
     
     // Get list of events, groups and users.
     RestSvcs.list("event-group-user", function(lists) {
@@ -249,7 +251,7 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, $routeParams, Res
             $scope.users = lists['user'];
 
             // Get lists of attendances
-            RestSvcs.searchByDate($routeParams.date1, $routeParams.date2, function(data) {
+            RestSvcs.searchByDate($scope.date1, $scope.date2, function(data) {
                 if(data != null) {
                     // Update the lists.
                     $scope.rows = data['lists'];
@@ -268,12 +270,12 @@ appCtrl.controller('RecordsCtrl', function ($scope, $location, $routeParams, Res
     
     // Go to next|previous month.
     $scope.changeMonth = function(num) {
-        var date1 = moment($routeParams.date1).add(num, 'months').startOf('month');
-        var date2 = moment($routeParams.date1).add(num, 'months').endOf('month');
+        var date1 = moment($scope.date1).add(num, 'months').startOf('month');
+        var date2 = moment($scope.date1).add(num, 'months').endOf('month');
         $location.path('/lists/' +date1.format('YYYY-MM-DD')+ '/' +date2.format('YYYY-MM-DD'));
     };
     
-    // Function to get the event|group|user of a record.
+    // Functions to get the data|event|group|user of a record.
     $scope.getDate = function(record) {
         return record != null && record.date != null? moment(record.date).format("MMMM Do YYYY") : null;
     }
