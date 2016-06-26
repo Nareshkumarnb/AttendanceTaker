@@ -4,11 +4,33 @@
  * Static class that provides several utilities methods.
  */
 class ApiUtils {
-    /*
+    /**
      * Reference to the logger object.
      */
     public static $logger;
 
+    /**
+     * List of errors objects.
+     */
+    public static $ERRORS = array(
+        "UserNotLogged" => array(
+            "error" => "AccessDenied",
+            "message" => "You must be logged to consume this service"
+        ),
+        "UserNotAdmin" => array(
+            "error" => "AccessDenied",
+            "message" => "You must be logged and have administrator privileges to consume this service"
+        ),
+        "UserDisabled" => array(
+            "error" => "AccessDenied", 
+            "message" => "The user has been disabled"
+        ),
+        "InvalidLogin" => array(
+            "error" => "InvalidLogin", 
+            "message" => "Invalid username or password"
+        )
+    );
+    
     /**
      * Gets an associative array from a database row.
      * 

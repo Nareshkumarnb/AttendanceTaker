@@ -62,10 +62,7 @@ $app->put('/:type/:id', function ($type, $id) use ($app) {
             echo json_encode(array("error" => $error, "message" => $message));            
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged and have administrator privileges to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotAdmin']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
@@ -149,10 +146,7 @@ $app->delete('/:type/:id', function ($type, $id) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged and have administrator privileges to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotAdmin']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
@@ -187,10 +181,7 @@ $app->put('/assistanceList', function () use ($app) {
             echo json_encode(array("error" => null));            
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged and have administrator privileges to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotAdmin']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.

@@ -25,11 +25,11 @@ $app->post('/login', function () use ($app) {
                 echo json_encode(array("error" => null, "user" => $users[0]->attributes() ));
             } else {
                 // The user is disabled, return error message.
-                echo json_encode(array("error" => "AccessDenied", "message" => "The user has been disabled"));
+                echo json_encode(ApiUtils::$ERRORS['UserDisabled']);
             }
         } else {
             // The user do not exists, return error message.
-            echo json_encode(array("error" => "InvalidLogin", "message" => "Invalid username or password"));
+            echo json_encode(ApiUtils::$ERRORS['InvalidLogin']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.

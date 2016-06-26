@@ -25,10 +25,7 @@ $app->get('/list/:types', function ($types) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotLogged']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
@@ -57,10 +54,7 @@ $app->get('/findById/:type/:id', function ($type, $id) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotLogged']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
@@ -84,10 +78,7 @@ $app->get('/findByGroup/:id', function ($id) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotLogged']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
@@ -117,10 +108,7 @@ $app->get('/searchByDate/:date1/:date2', function ($date1, $date2) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotLogged']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
@@ -158,10 +146,7 @@ $app->get('/assistanceList/:groupId/:eventId/:date', function ($groupId, $eventI
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            echo json_encode(ApiUtils::$ERRORS['UserNotLogged']);
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
