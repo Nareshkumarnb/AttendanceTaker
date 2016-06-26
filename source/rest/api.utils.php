@@ -4,6 +4,11 @@
  * Static class that provides several utilities methods.
  */
 class ApiUtils {
+    /*
+     * Reference to the logger object.
+     */
+    public static $logger;
+
     /**
      * Gets an associative array from a database row.
      * 

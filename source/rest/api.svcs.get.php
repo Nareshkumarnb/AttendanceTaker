@@ -33,8 +33,8 @@ $app->get('/list/:types', function ($types) {
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
         echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
-    }    
+        ApiUtils::$logger->LogError($e->getMessage());
+    }
 });
 
 // Service for get a row from the database.
@@ -65,7 +65,7 @@ $app->get('/findById/:type/:id', function ($type, $id) {
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
         echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::$logger->LogError($e->getMessage());
     }    
 });
 
@@ -92,7 +92,7 @@ $app->get('/findByGroup/:id', function ($id) {
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
         echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::$logger->LogError($e->getMessage());
     }    
 });
 
@@ -125,7 +125,7 @@ $app->get('/searchByDate/:date1/:date2', function ($date1, $date2) {
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
         echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::$logger->LogError($e->getMessage());
     }    
 });
 
@@ -166,6 +166,6 @@ $app->get('/assistanceList/:groupId/:eventId/:date', function ($groupId, $eventI
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
         echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::$logger->LogError($e->getMessage());
     }    
 });

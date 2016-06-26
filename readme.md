@@ -19,7 +19,7 @@ The application makes uses of a PostgreSQL database, whose parameters must be de
 
 After installation, two default accounts can be used to login: "admin" and "demo" (whose passwords are respectively "admin" and "demo").
 
-Optionally, you can configure the path in which the log files are going to be created. In order to do it, you must edit the file `api.init.php` located in the folder `source\rest`).
+Optionally, you can configure the path in which the log files are going to be created, by editing the file `api.config.php`.
 
 Stack
 -----

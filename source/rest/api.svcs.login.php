@@ -34,7 +34,7 @@ $app->post('/login', function () use ($app) {
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
         echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::$logger->LogError($e->getMessage());
     }
 });
 
