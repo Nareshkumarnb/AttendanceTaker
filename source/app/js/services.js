@@ -84,11 +84,22 @@ appSvc.factory('MyHttp', function($http, toastr, blockUI) {
             if(that.dialog) blockUI.stop();
 
             // Show error message.
-            if(that.toast) toastr.error("The application could not connect with the server. Please verify you network connection or contact your network administrator.", null);
+            if(that.toast) {
+                // Verify if the server returned an error message.
+                if(data && (data.error || data.message)) {
+                    // Print custom error.
+                    var msj = data.message? data.message : data.error;
+                    toastr.error(msj, null);
+                }
+                else {
+                    // Print generic error.
+                    toastr.error("The application could not connect with the server. Please verify you network connection or contact your network administrator.", null);
+                }
+            }
 
             // Invoke callback.
-            if(that.onError) that.onError(data);     
-        };            
+            if(that.onError) that.onError(data);
+        };
     };
 
     /**
@@ -234,7 +245,7 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
                     MySession.setUser(data.user);
 
                     // Return result.
-                    callback(true);                    
+                    callback(true);
                 })
                 .error(function(data) { 
                     // User's could not be logged.
@@ -371,7 +382,7 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
          */
         saveAssistanceList: function(rows, callback) {
             new MyHttp()
-                .success(function(data) {       
+                .success(function(data) {
                     // Data was saved.
                     callback(true);
                 })
@@ -390,16 +401,22 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
          * @param {Function} callback A callback function that receives a boolean indicating if the row was deleted.
          */
         save: function(type, row, callback) {
-            new MyHttp()
+            var my_http = new MyHttp()
                 .success(function(data) {
                     // Return result. 
                     if(callback) callback(true);
                 })
-                .error(function(data) { 
+                .error(function(data) {
                     // Data could not be deleted.
                     if(callback) callback(false); 
                 })
-                .put("rest/api.php/" + type + "/" + row.id, row);
+            ;
+            
+            if(row.id) {
+                my_http.put("rest/api.php/" + type + "/" + row.id, row);
+            } else {
+                my_http.post("rest/api.php/" + type, row);
+            }
         },
 
         /**
@@ -420,11 +437,9 @@ appSvc.factory('RestSvcs', function(MyHttp, MySession, toastr) {
                     if(callback) callback(false); 
                 })
                 .delete("rest/api.php/" + type + "/" + id);
-        }    
+        }
     };
     
     return svcs;
 });
-
-
 
