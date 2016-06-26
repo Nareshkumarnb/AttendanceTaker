@@ -10,26 +10,74 @@ class ApiUtils {
     public static $logger;
 
     /**
-     * List of errors objects.
+     * List of responses objects.
      */
-    public static $ERRORS = array(
+    private static $ERRORS = array(
         "UserNotLogged" => array(
-            "error" => "AccessDenied",
-            "message" => "You must be logged to consume this service"
+            "status" => 401,
+            "response" => array(
+                "error" => "AccessDenied",
+                "message" => "You must be logged to consume this service"
+            )
         ),
         "UserNotAdmin" => array(
-            "error" => "AccessDenied",
-            "message" => "You must be logged and have administrator privileges to consume this service"
+            "status" => 403,
+            "response" => array(
+                "error" => "AccessDenied",
+                "message" => "You must be logged and have administrator privileges to consume this service"
+            )
         ),
         "UserDisabled" => array(
-            "error" => "AccessDenied", 
-            "message" => "The user has been disabled"
+            "status" => 403,
+            "response" => array(
+                "error" => "AccessDenied", 
+                "message" => "The user has been disabled"
+            )
         ),
         "InvalidLogin" => array(
-            "error" => "InvalidLogin", 
-            "message" => "Invalid username or password"
+            "status" => 404,
+            "response" => array(
+                "error" => "InvalidLogin", 
+                "message" => "Invalid username or password"
+            )
         )
     );
+    
+    /**
+     * Handles an exception raised when executing a REST service.
+     * 
+     * @param Object $app The Slim's application object.
+     * @param Object $e The exception's object.
+     */
+    public static function handleException($app, $e) {
+        $app->response->setStatus(500);
+        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
+        self::$logger->LogError($e->getMessage());    
+    }
+    
+    /**
+     * Return an error message for a REST service.
+     *
+     * @param Object $app The Slim's application object.
+     * @param String $errorCode The error's code.
+     */
+    public static function returnError($app, $errorCode) {
+        $app->response->setStatus(self::$ERRORS[$errorCode]['status']);
+        echo json_encode(self::$ERRORS[$errorCode]['response']);
+    }
+    
+    /**
+     * Return a simple response for a REST service.
+     *
+     * @param Object $app The Slim's application object.
+     * @param String $error The error's code.
+     * @param String $message The message's content.
+     * @param Number $status The HTTP status code.
+     */
+    public static function returnSimpleMessage($app, $error, $message, $status) {
+        if(isset($status)) { $app->response->setStatus($status); }
+        echo json_encode(array("error" => $error, "message" => $message));
+    }
     
     /**
      * Gets an associative array from a database row.

@@ -8,6 +8,7 @@ $app->put('/:type/:id', function ($type, $id) use ($app) {
             // Init.
             $error = null;
             $message = null;
+            $statusCode = null;
 
             // Get input.
             $request = $app->request();
@@ -24,10 +25,12 @@ $app->put('/:type/:id', function ($type, $id) use ($app) {
                 if($type == "person") { $entry = new Person($attributes); }
                 if($type == "user") { 
                     if(!empty($attributes['password'])) {
+                        $attributes['password'] = sha1($attributes['password']);
                         $entry = new User($attributes); 
                     } else {
                         $error = "InvalidParameters";
                         $message = "You must select a password";
+                        $statusCode = 400;
                     }
                 }
 
@@ -52,32 +55,33 @@ $app->put('/:type/:id', function ($type, $id) use ($app) {
                 if($entry != null) { $entry->update_attributes($attributes); }
             }
             
-            // Verify if the entry was saved.
+            // Check if the entry was not saved.
             if($entry == null && $error == null) {
                 $error = "EntryNotSaved";
                 $message = "The entry could not be saved/updated";
+                $statusCode = 400;
             }
             
             // Return result.
-            echo json_encode(array("error" => $error, "message" => $message));            
+            ApiUtils::returnSimpleMessage($app, $error, $message, $statusCode);            
         } else {
             // Return error message.
-            echo json_encode(ApiUtils::$ERRORS['UserNotAdmin']);
+            ApiUtils::returnError($app, 'UserNotAdmin');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        ApiUtils::$logger->LogError($e->getMessage());
+        ApiUtils::handleException($app, $e);
     }    
 });
 
 // Service for delete a row from the database.
-$app->delete('/:type/:id', function ($type, $id) {
+$app->delete('/:type/:id', function ($type, $id) use ($app) {
     try {
         // Verify that the user is logged as administrator.
         if(ApiUtils::isAdmin()) {
             $error = null;
             $message = null;
+            $statusCode = null;
             
             // Groups.
             if($type == "group") {
@@ -91,7 +95,8 @@ $app->delete('/:type/:id', function ($type, $id) {
                     // Set error.
                     $error = "CantDeleteGroup";
                     $message = "The group could not be deleted since they are persons that belong to them";
-                }                
+                    $statusCode = 400;
+                }
             }
             
             // Event.
@@ -106,7 +111,8 @@ $app->delete('/:type/:id', function ($type, $id) {
                     // Set error.
                     $error = "CantDeleteEvent";
                     $message = "The event could not be deleted since some assistance lists are linked to him";
-                }                
+                    $statusCode = 400;
+                }
             }
             
             // Person.
@@ -121,7 +127,8 @@ $app->delete('/:type/:id', function ($type, $id) {
                     // Set error.
                     $error = "CantDeletePerson";
                     $message = "The person could not be deleted since some assistance lists are linked to him";
-                }                
+                    $statusCode = 400;
+                }
             }
             
             // User.
@@ -136,23 +143,20 @@ $app->delete('/:type/:id', function ($type, $id) {
                     // Set error.
                     $error = "CantDeleteUser";
                     $message = "The user could not be deleted since some assistance lists are linked to him";
-                }                
-            }            
+                    $statusCode = 400;
+                }
+            }
             
             // Return result.
-            echo json_encode(array(
-                "error" => $error,
-                "message" => $message
-            ));
+            ApiUtils::returnSimpleMessage($app, $error, $message, $statusCode);
         } else {
             // Return error message.
-            echo json_encode(ApiUtils::$ERRORS['UserNotAdmin']);
+            ApiUtils::returnError($app, 'UserNotAdmin');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        ApiUtils::$logger->LogError($e->getMessage());
-    }    
+        ApiUtils::handleException($app, $e);
+    }
 });
 
 
@@ -178,14 +182,13 @@ $app->put('/assistanceList', function () use ($app) {
             }
             
             // Return result.
-            echo json_encode(array("error" => null));            
+            echo json_encode(array("error" => null));
         } else {
             // Return error message.
-            echo json_encode(ApiUtils::$ERRORS['UserNotAdmin']);
+            ApiUtils::returnError($app, 'UserNotAdmin');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => $attributes, "message" => $e->getMessage()));
-        ApiUtils::$logger->LogError($e->getMessage());
-    }    
+        ApiUtils::handleException($app, $e);
+    }
 });
