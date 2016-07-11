@@ -21,20 +21,19 @@ $app->post('/login', function () use ($app) {
             $user = $users[0];
             if($user->disabled != 1) {
                 // The user is enabled, save his data in the session and return a success message.           
-                $_SESSION["user"] = $users[0]->attributes();           
+                $_SESSION["user"] = $users[0]->attributes();
                 echo json_encode(array("error" => null, "user" => $users[0]->attributes() ));
             } else {
                 // The user is disabled, return error message.
-                echo json_encode(array("error" => "AccessDenied", "message" => "The user has been disabled"));
+                ApiUtils::returnError($app, 'UserDisabled');
             }
         } else {
             // The user do not exists, return error message.
-            echo json_encode(array("error" => "InvalidLogin", "message" => "Invalid username or password"));
+            ApiUtils::returnError($app, 'InvalidLogin');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::handleException($app, $e);
     }
 });
 

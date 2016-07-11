@@ -3,7 +3,7 @@
 // ---- Initialize logging ---- //
 
 require_once 'libs/KLogger.php';
-$log = new KLogger ("log.txt" , KLogger::DEBUG);
+ApiUtils::$logger = new KLogger (ApiConfig::$LOG_FILEPATH , KLogger::DEBUG);
 
 // ---- Initialize Slim Framework ---- //
 

@@ -3,8 +3,8 @@
 // ---- Initialization ---- //
 
 require_once 'api.config.php';
-require_once 'api.init.php';
 require_once 'api.utils.php';
+require_once 'api.init.php';
 
 // ---- Services ---- //
 
@@ -41,7 +41,7 @@ include_once 'api.svcs.edit.php';
 //    }catch(Exception $e) {
 //        // An exception ocurred. Return an error message.
 //        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-//        $GLOBALS['log']->LogError($e->getMessage());
+//        ApiUtils::$logger->LogError($e->getMessage());
 //    }    
 //});
 

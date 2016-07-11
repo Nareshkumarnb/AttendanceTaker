@@ -1,7 +1,7 @@
 <?php
 
 // Service for get the rows of a table.
-$app->get('/list/:types', function ($types) {
+$app->get('/list/:types', function ($types) use ($app) {
     try {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {
@@ -25,20 +25,16 @@ $app->get('/list/:types', function ($types) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            ApiUtils::returnError($app, 'UserNotLogged');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
-    }    
+        ApiUtils::handleException($app, $e);
+    }
 });
 
 // Service for get a row from the database.
-$app->get('/findById/:type/:id', function ($type, $id) {
+$app->get('/findById/:type/:id', function ($type, $id) use ($app) {
     try {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {
@@ -57,20 +53,16 @@ $app->get('/findById/:type/:id', function ($type, $id) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            ApiUtils::returnError($app, 'UserNotLogged');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::handleException($app, $e);
     }    
 });
 
 // Service for get all persons from a group.
-$app->get('/findByGroup/:id', function ($id) {
+$app->get('/findByGroup/:id', function ($id) use ($app) {
     try {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {
@@ -84,21 +76,17 @@ $app->get('/findByGroup/:id', function ($id) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            ApiUtils::returnError($app, 'UserNotLogged');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::handleException($app, $e);
     }    
 });
 
 
 // Service for get the rows of a table.
-$app->get('/searchByDate/:date1/:date2', function ($date1, $date2) {
+$app->get('/searchByDate/:date1/:date2', function ($date1, $date2) use ($app) {
     try {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {        
@@ -117,20 +105,16 @@ $app->get('/searchByDate/:date1/:date2', function ($date1, $date2) {
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            ApiUtils::returnError($app, 'UserNotLogged');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::handleException($app, $e);
     }    
 });
 
 // Service for get all persons from a group.
-$app->get('/assistanceList/:groupId/:eventId/:date', function ($groupId, $eventId, $date) {
+$app->get('/assistanceList/:groupId/:eventId/:date', function ($groupId, $eventId, $date) use ($app) {
     try {
         // Verify that the user is logged.
         if(isset($_SESSION['user'])) {
@@ -158,14 +142,10 @@ $app->get('/assistanceList/:groupId/:eventId/:date', function ($groupId, $eventI
             ));
         } else {
             // Return error message.
-            echo json_encode(array(
-                "error" => "AccessDenied",
-                "message" => "You must be logged to consume this service"
-            ));
+            ApiUtils::returnError($app, 'UserNotLogged');
         }
     }catch(Exception $e) {
         // An exception ocurred. Return an error message.
-        echo json_encode(array("error" => "Unexpected", "message" => $e->getMessage()));
-        $GLOBALS['log']->LogError($e->getMessage());
+        ApiUtils::handleException($app, $e);
     }    
 });
