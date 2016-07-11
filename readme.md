@@ -13,7 +13,7 @@ Administrator's users can (additionally) manage the list of events, groups, pers
 Usage
 -----
 
-The application should be able to run in any valid PHP web server, such as Apache.
+The application should be able to run in any valid PHP web server, such as Apache (note that  the modules `php_pdo_pgsql` and `php_pgsql` must be enabled).
 
 The application makes uses of a PostgreSQL database, whose parameters must be defined in the file `api.config.php` (located in the folder `source\rest`). Before the first run, the script `database.sql` must be executed in the database.
 
